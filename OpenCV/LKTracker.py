@@ -13,7 +13,7 @@ feature_params = dict( maxCorners = 4000,
                        blockSize = 2)
 
 class LK:
-    def __init__(self, lk_params, feature_params, source=None):
+    def __init__(self, lk_params, feature_params, source=None, bb=None):
         self.lk_params = lk_params
         self.feature_params = feature_params
         self.mouse_p1 = None
@@ -25,7 +25,12 @@ class LK:
             self.cam = cv2.VideoCapture(source)
         else:
             self.cam = cv2.VideoCapture(0)
-        self.start()
+        if not bb:
+            self.start()
+        else:
+            self.bb = bb
+            _, self.img = self.cam.read()
+            self.lk()
         
     def start(self):
         _, self.img = self.cam.read()
@@ -47,17 +52,18 @@ class LK:
         elif event == cv.CV_EVENT_LBUTTONUP and self.mouse_drag:
             self.mouse_p2 = (x, y)
             self.mouse_drag=False
-            cv2.destroyWindow("img")
-            self.lk()
         cv2.imshow("img",self.img)
-        cv2.waitKey(60)
+        cv2.waitKey(30)
+        if self.mouse_p1 and self.mouse_p2:
+            cv2.destroyWindow("img")
+            xmax = max((self.mouse_p1[0],self.mouse_p2[0]))
+            xmin = min((self.mouse_p1[0],self.mouse_p2[0]))
+            ymax = max((self.mouse_p1[1],self.mouse_p2[1]))
+            ymin = min((self.mouse_p1[1],self.mouse_p2[1]))
+            self.bb = [xmin,ymin,xmax-xmin,ymax-ymin]
+            self.lk()
     
     def lk(self):
-        xmax = max((self.mouse_p1[0],self.mouse_p2[0]))
-        xmin = min((self.mouse_p1[0],self.mouse_p2[0]))
-        ymax = max((self.mouse_p1[1],self.mouse_p2[1]))
-        ymin = min((self.mouse_p1[1],self.mouse_p2[1]))
-        self.bb = [xmin,ymin,xmax-xmin,ymax-ymin]
         bb = self.bb
         oldg = cv2.cvtColor(self.img, cv2.cv.CV_BGR2GRAY)
         old_pts = None
@@ -98,8 +104,12 @@ class LK:
                 oldg = newg
                 cv2.rectangle(img, (bb[0],bb[1]),(bb[0]+bb[2],bb[1]+bb[3]), color=(255,0,0))
                 cv2.imshow("img", img)
-                cv2.waitKey(30)
+                k=cv2.waitKey(30)
+                if k==27:
+                    cv2.destroyAllWindows()
+                    break
             except KeyboardInterrupt:
+                cv2.destroyAllWindows()
                 break
                 
     def __predictBB(self, bb0, pt0, pt1):
@@ -120,4 +130,4 @@ class LK:
         if bb[1] <= 0:
             bb[1] = 10
         return bb
-#LK(lk_params, feature_params)
+LK(lk_params, feature_params)
