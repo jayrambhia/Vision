@@ -150,7 +150,7 @@ void mouseHandler(int event, int x, int y, int flags, void* param)
 
 /* Function to predict the new bounding box
  * WARNING: This function sucks. I am not changing the size of the bounding box at all
- * and also prediction is very sucky.
+ * and also prediction is very bad.
  * Need to come up with something better
  */
 void predictBB(vector<Point2f> old_pts, vector<Point2f> new_pts)
