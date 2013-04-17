@@ -54,7 +54,7 @@ int main()
             /* Filter matched keypoints depending upon the distance */             
             for (i=0; i < descriptor_roi.rows; i++)
             {
-                if (matches[i].distance < 200.0)
+                if (matches[i].distance < 0.5)
                 {
                     good_matches.push_back(matches[i]);
                 }

@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import itertools
+import sys
 
 def findKeyPoints(img, template, distance=200):
     detector = cv2.FeatureDetector_create("SIFT")
