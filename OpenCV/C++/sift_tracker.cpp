@@ -243,11 +243,20 @@ vector<double> getDiff(Point cen, double rad)
 /* get new points of the bounding box */
 void newPoints(vector<double> diff, Point cen, double rad)
 {
-    printf("rad = %lf\tcen=(%d, %d)\n",rad, cen.x, cen.y);
-    printf("%f %f %f %f\n",diff[0], diff[1], diff[2], diff[3]);
-    point1.x = cen.x - rad - diff[0];
-    point1.y = cen.y - rad - diff[1];
-    point2.x = cen.x + rad + diff[2];
-    point2.y = cen.y + rad + diff[3];
-    printf("(%d, %d), (%d, %d)\n", point1.x, point1.y, point2.x, point2.y);
+printf("rad = %lf\tcen=(%d, %d)\n",rad, cen.x, cen.y);
+printf("%f %f %f %f\n",diff[0], diff[1], diff[2], diff[3]);
+
+point1.x = cen.x - rad - diff[0] >= 0 ? cen.x - rad - diff[0]:0; //make sure the value is within the img
+point1.x = cen.x - rad - diff[0] <= img.cols ? cen.x - rad - diff[0]:img.cols;
+
+point1.y = cen.y - rad - diff[1] >= 0 ? cen.y - rad - diff[1]:0;
+point1.y = cen.y - rad - diff[1] <= img.rows ? cen.y - rad - diff[1]:img.rows;
+
+point2.x = cen.x + rad + diff[2] >= 0 ? cen.x + rad + diff[2]:0;
+point2.x = cen.x + rad + diff[2] <= img.cols ? cen.x + rad + diff[2]:img.cols;
+
+point2.y = cen.y + rad + diff[3] >= 0 ? cen.y + rad + diff[3]:0;
+point2.y = cen.y + rad + diff[3] <= img.rows ? cen.y + rad + diff[3]:img.rows;
+
+printf("(%d, %d), (%d, %d)\n", point1.x, point1.y, point2.x, point2.y);
 }
