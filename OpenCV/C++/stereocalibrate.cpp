@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
     Mat imgU1, imgU2;
 
     initUndistortRectifyMap(CM1, D1, R1, P1, img1.size(), CV_32FC1, map1x, map1y);
-    initUndistortRectifyMap(CM2, D2, R2, P2, img1.size(), CV_32FC1, map2x, map2y);
+    initUndistortRectifyMap(CM2, D2, R2, P2, img2.size(), CV_32FC1, map2x, map2y);
 
     printf("Undistort complete\n");
 
